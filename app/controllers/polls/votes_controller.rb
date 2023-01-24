@@ -19,6 +19,7 @@ module Polls
           format.turbo_stream { render 'result' }
         end
       else
+        # render :new, status: :unprocessable_entity
         render :new, status: :unprocessable_entity
       end
     end

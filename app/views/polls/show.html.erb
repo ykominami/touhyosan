@@ -6,5 +6,5 @@
 <%= render 'result', poll: @poll %>
 
 <%= turbo_frame_tag "vote_form" do %>
-  <%= link_to '投票を作成', new_poll_vote_path(@poll) %>
+  <%= link_to '投票を作成(polls.show TFT vote_form)', new_poll_vote_path(@poll) %>
 <% end %>
