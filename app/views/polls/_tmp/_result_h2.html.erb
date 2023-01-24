@@ -1,0 +1,103 @@
+<% @poll.choices.each do |choice|
+    @choices[choice.id] ||= {}
+    @choices[choice.id][:title] = choice.title
+   end %>
+
+<% @poll.votes.each do |vote|
+  @votes[vote.id] ||= {}
+  @votes[vote.id][:ar] ||= vote
+  @votes[vote.id][:details] ||= {}
+  vote.vote_details.each do |vd|
+    @votes[vote.id][:details][vd.choice_id] = vd.status
+  end
+end %>
+<% cids = @choices.keys.reverse %>
+<% cids.each do |choice_id|
+  value = @choices[choice_id] %>
+  <tr>
+    <th><%= value[:title] %></th>
+  <% @votes.each do |vote_id, hash| %>
+    <td><%= hash[:details][choice_id] %></td>
+  <% end %>
+  <tr>
+<% end %>
+
+<table id="poll_result_a0" class="table">
+<tbody>
+  <th id="poll_result_a_tr_1">
+    <th>話題</th>
+    <th>○</th>
+    <th>△</th>
+    <th>×</th>
+    <% @votes.each do |vote_id, hash| %>
+      <% vote = hash[:ar] %>
+      <th><%= link_to vote.user_name, edit_poll_vote_path(@poll, vote), data: {turbo_frame: "vote_form"} %></th>
+    <% end %>
+  </th>
+  <% cids.each_with_index do |choice_id, index|
+    value = @choices[choice_id] %>
+  <tr id="poll_result_a_tr_<%= index %>">
+    <th><%= value[:title] %></th>
+    <td>1</td>
+    <td>0</td>
+    <td>1</td>
+    <% @votes.each do |vote_id, hash| %>
+      <td><%= hash[:details][choice_id] %></td>
+    <% end %>
+  </tr>
+  <% end %>
+</tbody>
+</table>
+
+<table id="poll_result_a" class="table">
+<tbody>
+  <tr id="poll_result_a_tr_1">
+    <th>話題</th>
+    <th>○</th>
+    <th>△</th>
+    <th>×</th>
+    <th>
+      <a data-turbo-frame="vote_form" href="/polls/64/votes/293/edit">A</a>
+    </th>
+    <th>
+      <a data-turbo-frame="vote_form" href="/polls/64/votes/294/edit">B</a>
+    </th>
+  </tr>
+  <tr id="poll_result_a_tr_2">
+    <th>A</th>
+    <td>1</td>
+    <td>0</td>
+    <td>1</td>
+    <td>yes</td>
+    <td>no</td>
+  </tr>
+  <tr id="poll_result_a_tr_3">
+    <th>B</th>
+    <td>0</td>
+    <td>1</td>
+    <td>1</td>
+    <td>no</td>
+    <td>yes_and_no</td>
+  </tr>
+  <tr id="poll_result_a_tr_4">
+    <th>C</th>
+    <td>0</td>
+    <td>0</td>
+    <td>2</td>
+    <td>no</td>
+    <td>no</td>
+  </tr>
+  <tr id="poll_result_a_tr_5">
+    <th>コメント</th>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>B</td>
+  </tr>
+</tbody>
+</table>
+
+<%= turbo_frame_tag "vote_form" do %>
+  <% link_to '投票を作成', new_poll_vote_path(@poll) %>
+<% end %>

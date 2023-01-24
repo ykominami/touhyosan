@@ -1,0 +1,50 @@
+<% @choices = {}
+   @poll.choices.each do |choice|
+    next unless choice
+    next unless choice.id
+    @choices[choice.id] ||= {}
+    @choices[choice.id][:title] = choice.title
+   end
+
+@votexs = {}
+@poll.choices.default_order.each do |choice|
+  choice.title
+  choice.vote_details.where(status: :yes).count
+  choice.vote_details.where(status: :yes_and_no).count
+  choice.vote_details.where(status: :no).count
+  @poll.votes.default_order.each do |vote|
+    vote.vote_details.find_by(choice: choice).status
+  end
+end
+
+@poll.votes.each do |vote|
+  @votexs[vote.id] ||= {}
+  @votexs[vote.id][:ar] ||= vote
+  @votexs[vote.id][:details] ||= {}
+  vote.vote_details.each do |vd|
+    @votexs[vote.id][:details][vd.choice_id] = vd.status
+  end
+end
+sorted_cids = @choices ? @choices.keys.reverse : [] 
+%>
+
+<% @votexs %>
+
+<% sorted_cids.each_with_index do |choice_id, index|
+    value = @choices[choice_id] %>
+<%= turbo_stream.replace "poll_result_#{index}" do %>
+  <tr id="poll_result_a_tr_<%= index %>">
+    <th><%= value[:title] %></th>
+    <td>1</td>
+    <td>0</td>
+    <td>1</td>
+    <% @votexs.each do |vote_id, hash| %>
+      <td><%= hash[:details][choice_id] %></td>
+    <% end %>
+  </tr>
+<% end %>
+<% end %>
+
+<%= turbo_stream.update "vote_form" do %>
+  <%= link_to '投票を作成', new_poll_vote_path(@poll) %>
+<% end %>
