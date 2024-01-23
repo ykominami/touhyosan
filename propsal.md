@@ -5,6 +5,7 @@ classDiagram
   direction RL
   class PrePoll {
     - Text : content
+    - String : session_id
   }
   class Proposal {
     - String : name
