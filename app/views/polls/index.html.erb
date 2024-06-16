@@ -1,0 +1,29 @@
+<h1>投票さんindex</h1>
+
+<h2>「<%= @poll.title %>」</h2>
+
+<table class="table">
+  <tbody>
+    <%= @polls.each do |poll| %>
+  <tr>
+    <th>話題</th>
+    <th>○</th>
+    <th>△</th>
+    <th>×</th>
+
+    <% @poll.votes.default_order.each do |vote| %>
+      <th>
+        <%= link_to vote.user_name, edit_poll_vote_path(@poll, vote), data: {turbo_frame: "vote_form"} %>
+      </th><%# TODO: クリックしたらスクロールするようにする(autoscroll) %>
+    <% end %>
+  </tr>
+
+  </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= turbo_frame_tag "vote_form" do %>
+  <%= link_to '投票を作成', new_poll_vote_path(@poll) %>
+<% end %>
+

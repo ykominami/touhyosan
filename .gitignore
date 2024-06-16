@@ -43,3 +43,7 @@
 /config/database.yml
 
 .idea
+
+.tool-versions
+
+touhyosan.code-workspace
