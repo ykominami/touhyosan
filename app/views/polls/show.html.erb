@@ -1,10 +1,29 @@
 <%= turbo_stream_from @poll %>
-<h1>投票さん</h1>
-
-<h2>「<%= @poll.title %>」</h2>
+<h2 class="page-heading">「<%= @poll.title %>」の投票結果</h2>
+<div class="callout callout-primary">
+  「投票を作成」ボタンをクリックして、投票を行いましょう。
+  <br>
+  投票結果はリアルタイムに更新されます。
+</div>
 
 <%= render 'result', poll: @poll %>
 
-<%= turbo_frame_tag "vote_form" do %>
-  <%= link_to '投票を作成(polls.show TFT vote_form)', new_poll_vote_path(@poll) %>
-<% end %>
+<%= link_to "投票を作成",
+            new_poll_vote_path(@poll),
+            class: "btn btn-primary",
+            data: { turbo_frame: "vote_form" } %>
+
+<%# TODO: layouts/application.html.erb に移動するなどして共通化したい %>
+<div data-controller="modal"
+     data-action="turbo:frame-load->modal#show turbo:submit-end->modal#hide">
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-modal-target="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <%= turbo_frame_tag "vote_form", autoscroll: true, data: { autoscroll_behavior: 'start' } do %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
