@@ -9,7 +9,7 @@ gem 'bootsnap', require: false
 gem 'cssbundling-rails'
 gem 'jbuilder'
 gem 'jsbundling-rails'
-gem 'pg', '~> 1.1'
+gem 'pg', '~> 1.6'
 gem 'puma', '~> 5.0'
 gem 'redis', '~> 4.0'
 gem 'sprockets-rails'
